@@ -2470,7 +2470,9 @@ void crearDisco(int vsize, char vunit, char vfit, char vpath[500], int bande1, i
     strncpy(temporarl, vpath, 500);
     char tem[50] = "";
     if (bande1 == 1 && bande2 == 1) {
-        if (vunit == 'k') {
+        if (vunit == 'b') {
+            varsize = vsize;
+        } else if (vunit=='k'){
             varsize = vsize * 1024;
         } else {
             varsize = vsize * 1024 * 1024;
@@ -2502,7 +2504,7 @@ void analizaMkdisk(char comando[10000]) {
     char *cut = strtok(comando, " ");
     cut = strtok(NULL, " =");
     int varsize = 0;
-    char varunit = 'M';
+    char varunit = 'K';
     char varfit = 'F';
     char* varpath = "";
     while (cut != NULL) {
@@ -2512,7 +2514,9 @@ void analizaMkdisk(char comando[10000]) {
             varsize = atoi(cut);
         } else if (strcasecmp(cut, "-u") == 0) {
             cut = strtok(NULL, "= ");
-            if (strcasecmp(cut, "K") == 0) {
+            if (strcasecmp(cut, "B") == 0) {
+                varunit = 'b';
+            } else if (strcasecmp(cut, "K") == 0) {
                 varunit = 'k';
             } else if (strcasecmp(cut, "m") == 0) {
                 varunit = 'M';
@@ -3408,7 +3412,9 @@ void EjecutarFdisk(int vsize, char vunit, char vpath[500], char vtype, char vfit
             cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Error el disco " << vpath << " no existe no se pueden hacer las particiones  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
             return;
         }
-        if (vunit == 'k' || vunit == 'K') {
+        if (vunit == 'b' || vunit == 'B') {
+            vsize = vsize;
+        } else if (vunit == 'k' || vunit == 'K') {
             vsize = vsize * 1024;
         } else if (vunit == 'm' || vunit == 'M') {
             vsize = vsize * 1024 * 1024;
@@ -3434,7 +3440,7 @@ void EjecutarFdisk(int vsize, char vunit, char vpath[500], char vtype, char vfit
         strcat(raidn, pathc);
         strcat(raidn, "/");
         strcat(raidn, aux1);
-        strcat(raidn, "_v1.disk");
+        strcat(raidn, "_v1.dk");
         char auxraid[500] = "";
         strncpy(auxraid, raidn, 500);
         MBR *tempo = (MBR*) readDisk(auxpath4, 0, sizeof (MBR));
@@ -3563,7 +3569,7 @@ void EjecutarFdisk(int vsize, char vunit, char vpath[500], char vtype, char vfit
                 strcat(raidn, pathc);
                 strcat(raidn, "/");
                 strcat(raidn, aux1);
-                strcat(raidn, "_v1.disk");
+                strcat(raidn, "_v1.dk");
                 char auxraid[500] = "";
                 strncpy(auxraid, raidn, 500);
                 eliminarP(auxpath, vname2, vdeletem, auxraid);
@@ -3596,7 +3602,7 @@ void EjecutarFdisk(int vsize, char vunit, char vpath[500], char vtype, char vfit
                 strcat(raidn, pathc);
                 strcat(raidn, "/");
                 strcat(raidn, aux1);
-                strcat(raidn, "_v1.disk");
+                strcat(raidn, "_v1.dk");
                 char auxraid[500] = "";
                 strncpy(auxraid, raidn, 500);
                 reducirParticion(auxpath, vname2, vadd, auxraid);
@@ -3626,7 +3632,7 @@ void EjecutarFdisk(int vsize, char vunit, char vpath[500], char vtype, char vfit
                 strcat(raidn, pathc);
                 strcat(raidn, "/");
                 strcat(raidn, aux1);
-                strcat(raidn, "_v1.disk");
+                strcat(raidn, "_v1.dk");
                 char auxraid[500] = "";
                 strncpy(auxraid, raidn, 500);
                 agregarEspacio(auxpath, vname2, vadd, auxraid);
@@ -3657,14 +3663,14 @@ void analizFdisk(char comando[10000]) {
             cut = strtok(NULL, "= ");
             bande1 = 1;
             vsize = atoi(cut);
-        } else if (strcasecmp(cut, "-unit") == 0) {
+        } else if (strcasecmp(cut, "-u") == 0) {
             cut = strtok(NULL, "= ");
             if ((strcasecmp(cut, "b") == 0) || (strcasecmp(cut, "k") == 0) || (strcasecmp(cut, "m") == 0)) {
                 vunit = cut[0];
             } else {
                 cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Error el unit en fdisk no esta segun lo establecido !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             }
-        } else if (strcasecmp(cut, "-fit") == 0) {
+        } else if (strcasecmp(cut, "-f") == 0) {
             cut = strtok(NULL, "= ");
             if ((strcasecmp(cut, "ff") == 0) || (strcasecmp(cut, "bf") == 0) || (strcasecmp(cut, "wf") == 0)) {
                 vfit = cut[0];
@@ -3735,7 +3741,7 @@ void EjecutaMount(char name[16], char path[500]) {
 
                 //insertar
                 if (primero == NULL) {
-                    strcpy(NodoNuevo->id, "vda1");
+                    strcpy(NodoNuevo->id, "411a");
                     NodoNuevo->letra = 97;
                     NodoNuevo->numero = 1;
                     primero = NodoNuevo;
@@ -3766,17 +3772,17 @@ void EjecutaMount(char name[16], char path[500]) {
                             NodoNuevo->numero = numActual;
                             char idm = (char) letActual;
                             char idm2[16] = "";
-                            idm2[0] = 'v';
-                            idm2[1] = 'd';
-                            idm2[2] = idm;
+                            idm2[0] = '4';
+                            idm2[1] = '1';
+                            idm2[3] = idm;
                             if (numActual == 1) {
-                                idm2[3] = '1';
+                                idm2[2] = '1';
                             } else if (numActual == 2) {
-                                idm2[3] = '2';
+                                idm2[2] = '2';
                             } else if (numActual == 3) {
-                                idm2[3] = '3';
+                                idm2[2] = '3';
                             } else if (numActual == 4) {
-                                idm2[3] = '4';
+                                idm2[2] = '4';
                             }
                             strncpy(NodoNuevo->id, idm2, 16);
                             ultimo->next = NodoNuevo;
@@ -3788,10 +3794,10 @@ void EjecutaMount(char name[16], char path[500]) {
                             NodoNuevo->letra = letActual;
                             NodoNuevo->numero = 1;
                             char idm2[16] = "";
-                            idm2[0] = 'v';
-                            idm2[1] = 'd';
-                            idm2[2] = (char) letActual;
-                            idm2[3] = '1';
+                            idm2[0] = '4';
+                            idm2[1] = '1';
+                            idm2[3] = (char) letActual;
+                            idm2[2] = '1';
                             strncpy(NodoNuevo->id, idm2, 16);
                             ultimo->next = NodoNuevo;
                             NodoNuevo->prev = ultimo;
@@ -3947,7 +3953,7 @@ void ReporteMBR(MBR *Repo, char vpath[500], char carpeDot[500], char nombre[25],
 
     fprintf(nuevoRepo, "<tr><td bgcolor='LightSeaGreen'><b>   Nombre Disco </b></td><td>  %s  </td></tr> \n", nombreD);
     fprintf(nuevoRepo, "<tr><td><b> Tamano MBR </b></td><td> %i </td></tr> \n", Repo->mbr_tamano);
-    fprintf(nuevoRepo, "<tr><td><b> Fecha De creacion </b></td><td> 24/08/19 </td></tr> \n");
+    fprintf(nuevoRepo, "<tr><td><b> Fecha De creacion </b></td><td> 5/09/21 </td></tr> \n");
     fprintf(nuevoRepo, "<tr><td><b> MBR Disk Signature </b></td><td> %i </td></tr> \n", Repo->mbr_disk_signature);
     fprintf(nuevoRepo, "<tr><td><b> Disk Fit </b></td><td>  First Fit </td></tr> \n");
     for (int i = 0; i < 4; i++) {
@@ -3977,7 +3983,7 @@ void ReporteMBR(MBR *Repo, char vpath[500], char carpeDot[500], char nombre[25],
         EBR* primero = (EBR*) readDisk(auxpath2, Extendida->inicio, sizeof (EBR));
         if (primero == NULL) {
             printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Error no se puede recuperar el primer EBR de %s !!!!!!!!!!!!!!!!!!!!!!!!!!!", Extendida->pname);
-            return;
+            //return;
         }
         EBR *nodoaux;
         if (primero != NULL) {
@@ -5568,7 +5574,7 @@ void analizador(char cadena3[10000]) {
             analizFdisk(cadenaux);
         } else if (strcasecmp(cadena3, "mount") == 0) {
             analizaMount(cadenaux);
-        } else if (strcasecmp(cadena3, "unmount") == 0) {
+        } else if (strcasecmp(cadena3, "umount") == 0) {
             analizaUnmount(cadenaux);
         } else if (strcasecmp(cadena3, "rep") == 0) {
             analizaRep(cadenaux);
