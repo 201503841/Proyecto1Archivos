@@ -88,6 +88,22 @@ Este comando montará una partición del disco en el sistema e imprimira en cons
 ![GitHub Logo](/Fotos/IMAGEN8.jpg)
 
 
+COMANDO UMOUNT
+======================
+## Desmonta una partición del sistema:
+Se utilizará el id que se le asignó a la partición al momento de cargarla. Si el ID no existe se notificará por un mensaje que no se encontre el id.
+
+## Ejemplo en consola:
+
+```
+rep -id=413b
+
+```
+
+
+![GitHub Logo](/Fotos/IMAGEN9.jpg)
+
+
 ## REPORTES ##
 
 REP
